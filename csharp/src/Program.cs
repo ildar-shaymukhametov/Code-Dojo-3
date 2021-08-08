@@ -32,8 +32,8 @@ namespace src
                 .Select(x =>
                 (
                     Day: int.Parse(x[0]),
-                    MaxTemp: int.Parse(new string(x[1].Where(Char.IsDigit).ToArray())),
-                    MinTemp: int.Parse(new string(x[2].Where(Char.IsDigit).ToArray()))
+                    MaxTemp: ExtractNumber(x[1]),
+                    MinTemp: ExtractNumber(x[2])
                 ))
                 .ToArray();
 
@@ -42,7 +42,12 @@ namespace src
 
             return result;
         }
-        
+
+        private static int ExtractNumber(string str)
+        {
+            return int.Parse(new string(str.Where(Char.IsDigit).ToArray()));
+        }
+
         private static List<(int first, int second)> ToTuples(IEnumerable<(int Day, int MaxTemp, int MinTemp)> items)
         {
             return items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
