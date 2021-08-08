@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Text.RegularExpressions;
 
 namespace src
 {
@@ -20,30 +21,18 @@ namespace src
     {
         private readonly IDataProvider dataProvider;
         private readonly MinSpreadIndexCalculator minSpreadCalculator;
+        private readonly IParser<(int Day, int MaxTemp, int MinTemp)> parser;
 
-        public MinTempSpreadDayCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator)
+        public MinTempSpreadDayCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator, IParser<(int Day, int MaxTemp, int MinTemp)> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
+            this.parser = parser;
         }
 
         public int GetDay()
         {
-            var items = dataProvider.GetData()
-                .Split("\r\n")
-                .Skip(2)
-                .SkipLast(1)
-                .Select(x => x
-                    .Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                    .ToArray())
-                .Select(x =>
-                (
-                    Day: int.Parse(x[0]),
-                    MaxTemp: ExtractNumber(x[1]),
-                    MinTemp: ExtractNumber(x[2])
-                ))
-                .ToArray();
-
+            var items = parser.Parse(dataProvider.GetData());
             var index = minSpreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Day;
 
@@ -65,30 +54,18 @@ namespace src
     {
         private readonly IDataProvider dataProvider;
         private readonly MinSpreadIndexCalculator minSpreadCalculator;
+        private readonly IParser<(string Team, int For, int Against)> parser;
 
-        public MinGoalSpreadTeamCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator)
+        public MinGoalSpreadTeamCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator, IParser<(string Team, int For, int Against)> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
+            this.parser = parser;
         }
 
         public string GetTeam()
         {
-            var items = dataProvider.GetData()
-                .Split("\r\n")
-                .Skip(1)
-                .Where(x => !x.Trim().All(c => c == '-'))
-                .Select(x => x
-                    .Split(" ", StringSplitOptions.RemoveEmptyEntries)
-                    .ToArray())
-                .Select(x =>
-                (
-                    Team: x[1],
-                    For: int.Parse(x[6]),
-                    Against: int.Parse(x[8])
-                ))
-                .ToArray();
-                
+            var items = parser.Parse(dataProvider.GetData());
             var index = minSpreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Team;
 
@@ -117,6 +94,38 @@ namespace src
             });
 
             return items.IndexOf(item);
+        }
+    }
+
+    public interface IParser<T>
+    {
+        T[] Parse(string data);
+    }
+
+    public class Parser<T> : IParser<T>
+    {
+        private string regex;
+        private Func<string[], object> selector;
+
+        public Parser(string regex, Func<string[], object> selector)
+        {
+            this.regex = regex;
+            this.selector = selector;
+        }
+
+        public T[] Parse(string data)
+        {
+            var result = data
+                .Split("\r\n")
+                .Where(x => Regex.IsMatch(x, regex))
+                .Select(x => x
+                    .Split(" ", StringSplitOptions.RemoveEmptyEntries)
+                    .ToArray())
+                .Select(selector)
+                .Cast<T>()
+                .ToArray();
+
+            return result;
         }
     }
 }
