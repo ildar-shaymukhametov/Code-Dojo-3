@@ -20,9 +20,9 @@ namespace src
             this.minSpreadCalculator = minSpreadCalculator;
         }
 
-        public int GetDay(string fileContents)
+        public int GetDay(string data)
         {
-            var items = fileContents
+            var items = data
                 .Split("\r\n")
                 .Skip(2)
                 .SkipLast(1)
@@ -63,9 +63,9 @@ namespace src
             this.minSpreadCalculator = minSpreadCalculator;
         }
 
-        public string GetTeam(string fileContents)
+        public string GetTeam(string data)
         {
-            var items = fileContents
+            var items = data
                 .Split("\r\n")
                 .Skip(1)
                 .Where(x => !x.Trim().All(c => c == '-'))
