@@ -1,5 +1,5 @@
 ﻿using System;
-using System.IO;
+using System.Collections.Generic;
 using System.Linq;
 
 namespace src
@@ -13,9 +13,16 @@ namespace src
     
     public class MinTempSpreadCalculator
     {
+        private readonly MinSpreadCalculator minSpreadCalculator;
+
+        public MinTempSpreadCalculator(MinSpreadCalculator minSpreadCalculator)
+        {
+            this.minSpreadCalculator = minSpreadCalculator;
+        }
+
         public int GetDay(string fileContents)
         {
-            var result = fileContents
+            var items = fileContents
                 .Split("\r\n")
                 .Skip(2)
                 .SkipLast(1)
@@ -28,17 +35,11 @@ namespace src
                     MaxTemp = int.Parse(new string(x[1].Where(Char.IsDigit).ToArray())),
                     MinTemp = int.Parse(new string(x[2].Where(Char.IsDigit).ToArray()))
                 })
-                .Aggregate((acc, v) =>
-                {
-                    var prevSpread = acc.MaxTemp - acc.MinTemp;
-                    var currSpread = v.MaxTemp - v.MinTemp;
-                    if (prevSpread < currSpread)
-                    {
-                        return acc;
-                    }
-                    return v;
-                })
-                .Day;
+                .ToArray();
+
+            var tuples = items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
+            var index = minSpreadCalculator.GetIndex(tuples);
+            var result = items.ElementAt(index).Day;
 
             return result;
         }
@@ -46,9 +47,16 @@ namespace src
 
     public class MinGoalSpreadCalculator
     {
+        private readonly MinSpreadCalculator minSpreadCalculator;
+
+        public MinGoalSpreadCalculator(MinSpreadCalculator minSpreadCalculator)
+        {
+            this.minSpreadCalculator = minSpreadCalculator;
+        }
+
         public string GetTeam(string fileContents)
         {
-            var result = fileContents
+            var items = fileContents
                 .Split("\r\n")
                 .Skip(1)
                 .Where(x => !x.Trim().All(c => c == '-'))
@@ -61,19 +69,32 @@ namespace src
                     For = int.Parse(x[6]),
                     Against = int.Parse(x[8])
                 })
-                .Aggregate((acc, v) =>
-                {
-                    var prevSpread = Math.Abs(acc.Against - acc.For);
-                    var currSpread = Math.Abs(v.Against - v.For);
-                    if (prevSpread < currSpread)
-                    {
-                        return acc;
-                    }
-                    return v;
-                })
-                .Team;
+                .ToArray();
+                
+            var tuples = items.Select(x => (first: x.For, second: x.Against)).ToList();
+            var index = minSpreadCalculator.GetIndex(tuples);
+            var result = items.ElementAt(index).Team;
 
             return result;
+        }
+    }
+
+    public class MinSpreadCalculator
+    {
+        public int GetIndex(List<(int first, int second)> items)
+        {
+            var item = items.Aggregate((acc, v) =>
+            {
+                var prevSpread = Math.Abs(acc.first - acc.second);
+                var currSpread = Math.Abs(v.first - v.second);
+                if (prevSpread < currSpread)
+                {
+                    return acc;
+                }
+                return v;
+            });
+
+            return items.IndexOf(item);
         }
     }
 }

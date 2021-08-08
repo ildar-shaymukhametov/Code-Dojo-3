@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using src;
 using Xunit;
 
@@ -8,7 +9,7 @@ namespace test
         [Fact]
         public void MinTempSpreadCalculator___GetDay___Calculates_day_of_min_temp_spread()
         {
-            var sut = new MinTempSpreadCalculator();
+            var sut = new MinTempSpreadCalculator(new MinSpreadCalculator());
             var content = @"  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP
 
    1  10    5    74          53.8       0.00 F       280  9.6 270  17  1.6  93 23 1004.5
@@ -22,7 +23,7 @@ namespace test
         [Fact]
         public void MinGoalSpreadCalculator___GetTeam___Returns_team_with_min_goal_spread()
         {
-            var sut = new MinGoalSpreadCalculator();
+            var sut = new MinGoalSpreadCalculator(new MinSpreadCalculator());
             var content = @"       Team            P     W    L   D    F      A     Pts
     1. Arsenal         38    26   9   3    8  -  4    87
     2. Liverpool       38    24   8   6    17  -  3    80
@@ -34,6 +35,19 @@ namespace test
 ";
             var actual = sut.GetTeam(content);
             Assert.Equal("Ipswich", actual);
+        }
+
+        [Fact]
+        public void MinSpreadCalculator___GetIndex___Returns_index_of_an_item_with_min_spread()
+        {
+            var list = new List<(int first, int second)>
+            {
+                (20, 10),
+                (10, 5),
+                (100, 50)
+            };
+            var index = new MinSpreadCalculator().GetIndex(list);
+            Assert.Equal(1, index);
         }
     }
 }
