@@ -18,5 +18,22 @@ namespace test
             var actual = sut.GetDay(content);
             Assert.Equal(3, actual);
         }
+
+        [Fact]
+        public void MinGoalSpreadCalculator___GetTeam___Returns_team_with_min_goal_spread()
+        {
+            var sut = new MinGoalSpreadCalculator();
+            var content = @"       Team            P     W    L   D    F      A     Pts
+    1. Arsenal         38    26   9   3    8  -  4    87
+    2. Liverpool       38    24   8   6    17  -  3    80
+    3. Manchester_U    38    24   5   9    11  -  5    77
+   -------------------------------------------------------
+   18. Ipswich         38     9   9  20    4  -  6    36
+   19. Derby           38     8   6  24    13  -  6    30
+   20. Leicester       38     5  13  20    33  -  6    28
+";
+            var actual = sut.GetTeam(content);
+            Assert.Equal("Ipswich", actual);
+        }
     }
 }
