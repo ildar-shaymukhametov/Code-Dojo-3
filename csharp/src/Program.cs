@@ -29,19 +29,23 @@ namespace src
                 .Select(x => x
                     .Split(" ", StringSplitOptions.RemoveEmptyEntries)
                     .ToArray())
-                .Select(x => new
-                {
-                    Day = int.Parse(x[0]),
-                    MaxTemp = int.Parse(new string(x[1].Where(Char.IsDigit).ToArray())),
-                    MinTemp = int.Parse(new string(x[2].Where(Char.IsDigit).ToArray()))
-                })
+                .Select(x =>
+                (
+                    Day: int.Parse(x[0]),
+                    MaxTemp: int.Parse(new string(x[1].Where(Char.IsDigit).ToArray())),
+                    MinTemp: int.Parse(new string(x[2].Where(Char.IsDigit).ToArray()))
+                ))
                 .ToArray();
 
-            var tuples = items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
-            var index = minSpreadCalculator.GetIndex(tuples);
+            var index = minSpreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Day;
 
             return result;
+        }
+        
+        private static List<(int first, int second)> ToTuples(IEnumerable<(int Day, int MaxTemp, int MinTemp)> items)
+        {
+            return items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
         }
     }
 
