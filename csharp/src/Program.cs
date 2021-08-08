@@ -67,19 +67,23 @@ namespace src
                 .Select(x => x
                     .Split(" ", StringSplitOptions.RemoveEmptyEntries)
                     .ToArray())
-                .Select(x => new
-                {
-                    Team = x[1],
-                    For = int.Parse(x[6]),
-                    Against = int.Parse(x[8])
-                })
+                .Select(x =>
+                (
+                    Team: x[1],
+                    For: int.Parse(x[6]),
+                    Against: int.Parse(x[8])
+                ))
                 .ToArray();
                 
-            var tuples = items.Select(x => (first: x.For, second: x.Against)).ToList();
-            var index = minSpreadCalculator.GetIndex(tuples);
+            var index = minSpreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Team;
 
             return result;
+        }
+
+        private static List<(int first, int second)> ToTuples(IEnumerable<(string Team, int For, int Against)> items)
+        {
+            return items.Select(x => (first: x.For, second: x.Against)).ToList();
         }
     }
 
