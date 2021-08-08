@@ -2,4 +2,7 @@
 *.js
 */node_modules
 **/*.pyc
+bin/
+obj/
+.vscode/
 
