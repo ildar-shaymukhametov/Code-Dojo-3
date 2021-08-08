@@ -11,18 +11,25 @@ namespace src
         }
     }
     
+    public interface IDataProvider
+    {
+        string GetData();
+    }
+    
     public class MinTempSpreadDayCalculator
     {
+        private readonly IDataProvider dataProvider;
         private readonly MinSpreadIndexCalculator minSpreadCalculator;
 
-        public MinTempSpreadDayCalculator(MinSpreadIndexCalculator minSpreadCalculator)
+        public MinTempSpreadDayCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator)
         {
+            this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
         }
 
-        public int GetDay(string data)
+        public int GetDay()
         {
-            var items = data
+            var items = dataProvider.GetData()
                 .Split("\r\n")
                 .Skip(2)
                 .SkipLast(1)
@@ -56,16 +63,18 @@ namespace src
 
     public class MinGoalSpreadTeamCalculator
     {
+        private readonly IDataProvider dataProvider;
         private readonly MinSpreadIndexCalculator minSpreadCalculator;
 
-        public MinGoalSpreadTeamCalculator(MinSpreadIndexCalculator minSpreadCalculator)
+        public MinGoalSpreadTeamCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator)
         {
+            this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
         }
 
-        public string GetTeam(string data)
+        public string GetTeam()
         {
-            var items = data
+            var items = dataProvider.GetData()
                 .Split("\r\n")
                 .Skip(1)
                 .Where(x => !x.Trim().All(c => c == '-'))
