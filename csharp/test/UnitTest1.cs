@@ -7,9 +7,9 @@ namespace test
     public class UnitTest1
     {
         [Fact]
-        public void MinTempSpreadCalculator___GetDay___Calculates_day_of_min_temp_spread()
+        public void MinTempSpreadDayCalculator___GetDay___Calculates_day_of_min_temp_spread()
         {
-            var sut = new MinTempSpreadCalculator(new MinSpreadCalculator());
+            var sut = new MinTempSpreadDayCalculator(new MinSpreadCalculator());
             var content = @"  Dy MxT   MnT   AvT   HDDay  AvDP 1HrP TPcpn WxType PDir AvSp Dir MxS SkyC MxR MnR AvSLP
 
    1  10    5    74          53.8       0.00 F       280  9.6 270  17  1.6  93 23 1004.5
@@ -21,9 +21,9 @@ namespace test
         }
 
         [Fact]
-        public void MinGoalSpreadCalculator___GetTeam___Returns_team_with_min_goal_spread()
+        public void MinGoalSpreadTeamCalculator___GetTeam___Returns_team_with_min_goal_spread()
         {
-            var sut = new MinGoalSpreadCalculator(new MinSpreadCalculator());
+            var sut = new MinGoalSpreadTeamCalculator(new MinSpreadCalculator());
             var content = @"       Team            P     W    L   D    F      A     Pts
     1. Arsenal         38    26   9   3    8  -  4    87
     2. Liverpool       38    24   8   6    17  -  3    80

@@ -11,11 +11,11 @@ namespace src
         }
     }
     
-    public class MinTempSpreadCalculator
+    public class MinTempSpreadDayCalculator
     {
         private readonly MinSpreadCalculator minSpreadCalculator;
 
-        public MinTempSpreadCalculator(MinSpreadCalculator minSpreadCalculator)
+        public MinTempSpreadDayCalculator(MinSpreadCalculator minSpreadCalculator)
         {
             this.minSpreadCalculator = minSpreadCalculator;
         }
@@ -49,11 +49,11 @@ namespace src
         }
     }
 
-    public class MinGoalSpreadCalculator
+    public class MinGoalSpreadTeamCalculator
     {
         private readonly MinSpreadCalculator minSpreadCalculator;
 
-        public MinGoalSpreadCalculator(MinSpreadCalculator minSpreadCalculator)
+        public MinGoalSpreadTeamCalculator(MinSpreadCalculator minSpreadCalculator)
         {
             this.minSpreadCalculator = minSpreadCalculator;
         }
