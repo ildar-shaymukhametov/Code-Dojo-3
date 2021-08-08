@@ -13,9 +13,9 @@ namespace src
     
     public class MinTempSpreadDayCalculator
     {
-        private readonly MinSpreadCalculator minSpreadCalculator;
+        private readonly MinSpreadIndexCalculator minSpreadCalculator;
 
-        public MinTempSpreadDayCalculator(MinSpreadCalculator minSpreadCalculator)
+        public MinTempSpreadDayCalculator(MinSpreadIndexCalculator minSpreadCalculator)
         {
             this.minSpreadCalculator = minSpreadCalculator;
         }
@@ -56,9 +56,9 @@ namespace src
 
     public class MinGoalSpreadTeamCalculator
     {
-        private readonly MinSpreadCalculator minSpreadCalculator;
+        private readonly MinSpreadIndexCalculator minSpreadCalculator;
 
-        public MinGoalSpreadTeamCalculator(MinSpreadCalculator minSpreadCalculator)
+        public MinGoalSpreadTeamCalculator(MinSpreadIndexCalculator minSpreadCalculator)
         {
             this.minSpreadCalculator = minSpreadCalculator;
         }
@@ -92,7 +92,7 @@ namespace src
         }
     }
 
-    public class MinSpreadCalculator
+    public class MinSpreadIndexCalculator
     {
         public int GetIndex(List<(int first, int second)> items)
         {
