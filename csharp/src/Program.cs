@@ -1,5 +1,6 @@
-using System;
+﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text.RegularExpressions;
 
@@ -9,6 +10,55 @@ namespace src
     {
         static void Main(string[] args)
         {
+            var temperature = new Temperature(new WeatherDataProvider(), new SpreadCalculator(), GetTempParser());
+            var day = temperature.GetDay();
+            System.Console.WriteLine(day);
+
+            var football = new Football(new FootballDataProvider(), new SpreadCalculator(), GetFootballParser());
+            var team = football.GetTeam();
+            System.Console.WriteLine(team);
+        }
+
+        private static Parser<TempData> GetTempParser()
+        {
+            var regex = @"^\s+\d{1,2}\s.*$";
+            var selector = new Func<string[], object>(x => new TempData
+            {
+                Day = int.Parse(x[0]),
+                MaxTemp = int.Parse(new string(x[1].Where(Char.IsDigit).ToArray())),
+                MinTemp = int.Parse(new string(x[2].Where(Char.IsDigit).ToArray()))
+            });
+            var result = new Parser<TempData>(regex, selector);
+            return result;
+        }
+
+        private static Parser<FootballData> GetFootballParser()
+        {
+            var regex = @"\s+\d{1,2}\.\s([A-Za-z_]+)";
+            var selector = new Func<string[], object>(x => new FootballData
+            {
+                Team = x[1],
+                For = int.Parse(x[6]),
+                Against = int.Parse(x[8])
+            });
+            var result = new Parser<FootballData>(regex, selector);
+            return result;
+        }
+    }
+
+    public class WeatherDataProvider : IDataProvider
+    {
+        public string GetData()
+        {
+            return File.ReadAllText("src/weather.dat");
+        }
+    }
+
+    public class FootballDataProvider : IDataProvider
+    {
+        public string GetData()
+        {
+            return File.ReadAllText("src/football.dat");
         }
     }
     
