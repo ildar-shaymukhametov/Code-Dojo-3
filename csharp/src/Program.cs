@@ -39,11 +39,6 @@ namespace src
             return result;
         }
 
-        private static int ExtractNumber(string str)
-        {
-            return int.Parse(new string(str.Where(Char.IsDigit).ToArray()));
-        }
-
         private static List<(int first, int second)> ToTuples(IEnumerable<(int Day, int MaxTemp, int MinTemp)> items)
         {
             return items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
