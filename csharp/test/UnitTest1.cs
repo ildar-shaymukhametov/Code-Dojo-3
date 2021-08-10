@@ -10,27 +10,27 @@ namespace test
     public class UnitTest1
     {
         [Fact]
-        public void MinTempSpreadDayCalculator___GetDay___Calculates_day_of_min_temp_spread()
+        public void DayCalculator___GetDay___Calculates_day_of_min_temp_spread()
         {
             var parser = Substitute.For<IParser<(int Day, int MaxTemp, int MinTemp)>>();
             parser.Parse(default).ReturnsForAnyArgs(new[] { (1, 10, 5) });
-            var sut = new MinTempSpreadDayCalculator(Substitute.For<IDataProvider>(), new MinSpreadIndexCalculator(), parser);
+            var sut = new DayCalculator(Substitute.For<IDataProvider>(), new MinSpreadCalculator(), parser);
             var actual = sut.GetDay();
             Assert.Equal(1, actual);
         }
 
         [Fact]
-        public void MinGoalSpreadTeamCalculator___GetTeam___Returns_team_with_min_goal_spread()
+        public void TeamCalculator___GetTeam___Returns_team_with_min_goal_spread()
         {
             var parser = Substitute.For<IParser<(string Team, int For, int Against)>>();
             parser.Parse(default).ReturnsForAnyArgs(new[] { ("Ipswich", 10, 5) });
-            var sut = new MinGoalSpreadTeamCalculator(Substitute.For<IDataProvider>(), new MinSpreadIndexCalculator(), parser);
+            var sut = new TeamCalculator(Substitute.For<IDataProvider>(), new MinSpreadCalculator(), parser);
             var actual = sut.GetTeam();
             Assert.Equal("Ipswich", actual);
         }
 
         [Fact]
-        public void MinSpreadIndexCalculator___GetIndex___Returns_index_of_an_item_with_min_spread()
+        public void MinSpreadCalculator___GetIndex___Returns_index_of_an_item_with_min_spread()
         {
             var list = new List<(int first, int second)>
             {
@@ -38,7 +38,7 @@ namespace test
                 (10, 5),
                 (100, 50)
             };
-            var index = new MinSpreadIndexCalculator().GetIndex(list);
+            var index = new MinSpreadCalculator().GetIndex(list);
             Assert.Equal(1, index);
         }
 

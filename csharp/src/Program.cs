@@ -17,13 +17,13 @@ namespace src
         string GetData();
     }
     
-    public class MinTempSpreadDayCalculator
+    public class DayCalculator
     {
         private readonly IDataProvider dataProvider;
-        private readonly MinSpreadIndexCalculator minSpreadCalculator;
+        private readonly MinSpreadCalculator minSpreadCalculator;
         private readonly IParser<(int Day, int MaxTemp, int MinTemp)> parser;
 
-        public MinTempSpreadDayCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator, IParser<(int Day, int MaxTemp, int MinTemp)> parser)
+        public DayCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<(int Day, int MaxTemp, int MinTemp)> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
@@ -45,13 +45,13 @@ namespace src
         }
     }
 
-    public class MinGoalSpreadTeamCalculator
+    public class TeamCalculator
     {
         private readonly IDataProvider dataProvider;
-        private readonly MinSpreadIndexCalculator minSpreadCalculator;
+        private readonly MinSpreadCalculator minSpreadCalculator;
         private readonly IParser<(string Team, int For, int Against)> parser;
 
-        public MinGoalSpreadTeamCalculator(IDataProvider dataProvider, MinSpreadIndexCalculator minSpreadCalculator, IParser<(string Team, int For, int Against)> parser)
+        public TeamCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<(string Team, int For, int Against)> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
@@ -73,7 +73,7 @@ namespace src
         }
     }
 
-    public class MinSpreadIndexCalculator
+    public class MinSpreadCalculator
     {
         public int GetIndex(List<(int first, int second)> items)
         {
