@@ -143,9 +143,9 @@ namespace src
         {
             var item = items.Aggregate((acc, v) =>
             {
-                var prevSpread = Math.Abs(acc.first - acc.second);
-                var currSpread = Math.Abs(v.first - v.second);
-                if (prevSpread < currSpread)
+                var prev = Math.Abs(acc.first - acc.second);
+                var curr = Math.Abs(v.first - v.second);
+                if (prev < curr)
                 {
                     return acc;
                 }
