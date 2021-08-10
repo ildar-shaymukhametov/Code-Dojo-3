@@ -10,21 +10,21 @@ namespace test
     public class UnitTest1
     {
         [Fact]
-        public void DayCalculator___GetDay___Calculates_day_of_min_temp_spread()
+        public void Temperature___GetDay___Calculates_day_of_min_temp_spread()
         {
             var parser = Substitute.For<IParser<TempData>>();
             parser.Parse(default).ReturnsForAnyArgs(new[] { new TempData { Day = 1, MaxTemp = 10, MinTemp = 5 } });
-            var sut = new DayCalculator(Substitute.For<IDataProvider>(), new MinSpreadCalculator(), parser);
+            var sut = new Temperature(Substitute.For<IDataProvider>(), new SpreadCalculator(), parser);
             var actual = sut.GetDay();
             Assert.Equal(1, actual);
         }
 
         [Fact]
-        public void TeamCalculator___GetTeam___Returns_team_with_min_goal_spread()
+        public void Football___GetTeam___Returns_team_with_min_goal_spread()
         {
             var parser = Substitute.For<IParser<FootballData>>();
             parser.Parse(default).ReturnsForAnyArgs(new[] { new FootballData { Team = "Ipswich", For = 10, Against = 5 } });
-            var sut = new TeamCalculator(Substitute.For<IDataProvider>(), new MinSpreadCalculator(), parser);
+            var sut = new Football(Substitute.For<IDataProvider>(), new SpreadCalculator(), parser);
             var actual = sut.GetTeam();
             Assert.Equal("Ipswich", actual);
         }
@@ -38,7 +38,7 @@ namespace test
                 (10, 5),
                 (100, 50)
             };
-            var index = new MinSpreadCalculator().GetIndex(list);
+            var index = new SpreadCalculator().GetIndex(list);
             Assert.Equal(1, index);
         }
 

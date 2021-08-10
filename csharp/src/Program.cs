@@ -31,23 +31,23 @@ namespace src
         public int Against { get; set; }
     }
 
-    public class DayCalculator
+    public class Temperature
     {
         private readonly IDataProvider dataProvider;
-        private readonly MinSpreadCalculator minSpreadCalculator;
+        private readonly SpreadCalculator spreadCalculator;
         private readonly IParser<TempData> parser;
 
-        public DayCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<TempData> parser)
+        public Temperature(IDataProvider dataProvider, SpreadCalculator spreadCalculator, IParser<TempData> parser)
         {
             this.dataProvider = dataProvider;
-            this.minSpreadCalculator = minSpreadCalculator;
+            this.spreadCalculator = spreadCalculator;
             this.parser = parser;
         }
 
         public int GetDay()
         {
             var items = parser.Parse(dataProvider.GetData());
-            var index = minSpreadCalculator.GetIndex(ToTuples(items));
+            var index = spreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Day;
 
             return result;
@@ -59,23 +59,23 @@ namespace src
         }
     }
 
-    public class TeamCalculator
+    public class Football
     {
         private readonly IDataProvider dataProvider;
-        private readonly MinSpreadCalculator minSpreadCalculator;
+        private readonly SpreadCalculator spreadCalculator;
         private readonly IParser<FootballData> parser;
 
-        public TeamCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<FootballData> parser)
+        public Football(IDataProvider dataProvider, SpreadCalculator spreadCalculator, IParser<FootballData> parser)
         {
             this.dataProvider = dataProvider;
-            this.minSpreadCalculator = minSpreadCalculator;
+            this.spreadCalculator = spreadCalculator;
             this.parser = parser;
         }
 
         public string GetTeam()
         {
             var items = parser.Parse(dataProvider.GetData());
-            var index = minSpreadCalculator.GetIndex(ToTuples(items));
+            var index = spreadCalculator.GetIndex(ToTuples(items));
             var result = items.ElementAt(index).Team;
 
             return result;
@@ -87,7 +87,7 @@ namespace src
         }
     }
 
-    public class MinSpreadCalculator
+    public class SpreadCalculator
     {
         public int GetIndex(List<(int first, int second)> items)
         {
