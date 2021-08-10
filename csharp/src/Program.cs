@@ -16,14 +16,28 @@ namespace src
     {
         string GetData();
     }
-    
+
+    public class TempData
+    {
+        public int Day { get; set; }
+        public int MaxTemp { get; set; }
+        public int MinTemp { get; set; }
+    }
+
+    public class FootballData
+    {
+        public string Team { get; set; }
+        public int For { get; set; }
+        public int Against { get; set; }
+    }
+
     public class DayCalculator
     {
         private readonly IDataProvider dataProvider;
         private readonly MinSpreadCalculator minSpreadCalculator;
-        private readonly IParser<(int Day, int MaxTemp, int MinTemp)> parser;
+        private readonly IParser<TempData> parser;
 
-        public DayCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<(int Day, int MaxTemp, int MinTemp)> parser)
+        public DayCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<TempData> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
@@ -39,7 +53,7 @@ namespace src
             return result;
         }
 
-        private static List<(int first, int second)> ToTuples(IEnumerable<(int Day, int MaxTemp, int MinTemp)> items)
+        private static List<(int first, int second)> ToTuples(IEnumerable<TempData> items)
         {
             return items.Select(x => (first: x.MinTemp, second: x.MaxTemp)).ToList();
         }
@@ -49,9 +63,9 @@ namespace src
     {
         private readonly IDataProvider dataProvider;
         private readonly MinSpreadCalculator minSpreadCalculator;
-        private readonly IParser<(string Team, int For, int Against)> parser;
+        private readonly IParser<FootballData> parser;
 
-        public TeamCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<(string Team, int For, int Against)> parser)
+        public TeamCalculator(IDataProvider dataProvider, MinSpreadCalculator minSpreadCalculator, IParser<FootballData> parser)
         {
             this.dataProvider = dataProvider;
             this.minSpreadCalculator = minSpreadCalculator;
@@ -67,7 +81,7 @@ namespace src
             return result;
         }
 
-        private static List<(int first, int second)> ToTuples(IEnumerable<(string Team, int For, int Against)> items)
+        private static List<(int first, int second)> ToTuples(IEnumerable<FootballData> items)
         {
             return items.Select(x => (first: x.For, second: x.Against)).ToList();
         }
