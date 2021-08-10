@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text.RegularExpressions;
@@ -125,7 +125,7 @@ namespace src
         public T[] Parse(string data)
         {
             var result = data
-                .Split("\r\n")
+                .Split("\n")
                 .Where(x => Regex.IsMatch(x, regex))
                 .Select(x => x
                     .Split(" ", StringSplitOptions.RemoveEmptyEntries)
